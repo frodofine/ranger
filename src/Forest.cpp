@@ -133,7 +133,7 @@ void Forest::initCpp(std::string dependent_variable_name, MemoryMode memory_mode
 
   // Check if all catvars are coded in integers starting at 1
   if (!unordered_variable_names.empty()) {
-    std::string error_message = checkUnorderedVariables(data, unordered_variable_names);
+    std::string error_message = checkUnorderedVariables(*data, unordered_variable_names);
     if (!error_message.empty()) {
       throw std::runtime_error(error_message);
     }

@@ -25,7 +25,7 @@ Data::Data() :
         0), order_snps(false) {
 }
 
-size_t Data::getVariableID(std::string variable_name) const {
+size_t Data::getVariableID(const std::string& variable_name) const {
   auto it = std::find(variable_names.cbegin(), variable_names.cend(), variable_name);
   if (it == variable_names.cend()) {
     throw std::runtime_error("Variable " + variable_name + " not found.");

@@ -145,7 +145,7 @@ public:
     std::sort(no_split_variables.begin(), no_split_variables.end());
   }
 
-  const std::vector<bool>& getIsOrderedVariable() noexcept {
+  std::vector<bool>& getIsOrderedVariable() noexcept {
     return is_ordered_variable;
   }
 

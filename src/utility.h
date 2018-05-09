@@ -1,13 +1,13 @@
 /*-------------------------------------------------------------------------------
-This file is part of ranger.
+ This file is part of ranger.
 
-Copyright (c) [2014-2018] [Marvin N. Wright]
+ Copyright (c) [2014-2018] [Marvin N. Wright]
 
-This software may be modified and distributed under the terms of the MIT license.
+ This software may be modified and distributed under the terms of the MIT license.
 
-Please note that the C++ core of ranger is distributed under MIT license and the
-R package "ranger" under GPL3 license.
-#-------------------------------------------------------------------------------*/
+ Please note that the C++ core of ranger is distributed under MIT license and the
+ R package "ranger" under GPL3 license.
+ #-------------------------------------------------------------------------------*/
 
 #ifndef UTILITY_H_
 #define UTILITY_H_
@@ -51,7 +51,7 @@ void equalSplit(std::vector<uint>& result, uint start, uint end, uint num_parts)
  * @param file ofstream object to write to.
  */
 template<typename T>
-inline void saveVector1D(std::vector<T>& vector, std::ofstream& file) {
+inline void saveVector1D(const std::vector<T>& vector, std::ofstream& file) {
   // Save length
   size_t length = vector.size();
   file.write((char*) &length, sizeof(length));
@@ -59,7 +59,7 @@ inline void saveVector1D(std::vector<T>& vector, std::ofstream& file) {
 }
 
 template<>
-inline void saveVector1D(std::vector<bool>& vector, std::ofstream& file) {
+inline void saveVector1D(const std::vector<bool>& vector, std::ofstream& file) {
   // Save length
   size_t length = vector.size();
   file.write((char*) &length, sizeof(length));
@@ -105,7 +105,7 @@ inline void readVector1D(std::vector<bool>& result, std::ifstream& file) {
  * @param file ofstream object to write to.
  */
 template<typename T>
-inline void saveVector2D(std::vector<std::vector<T>>& vector, std::ofstream& file) {
+inline void saveVector2D(const std::vector<std::vector<T>>& vector, std::ofstream& file) {
   // Save length of first dim
   size_t length = vector.size();
   file.write((char*) &length, sizeof(length));
@@ -207,7 +207,7 @@ void drawWithoutReplacementWeighted(std::vector<size_t>& result, std::mt19937_64
  * @param num_samples Number of samples to draw
  */
 template<typename T>
-void drawWithoutReplacementFromVector(std::vector<T>& result, std::vector<T>& input,
+void drawWithoutReplacementFromVector(std::vector<T>& result, const std::vector<T>& input,
     std::mt19937_64& random_number_generator, size_t num_samples) {
 
   // Draw random indices
@@ -229,7 +229,7 @@ void drawWithoutReplacementFromVector(std::vector<T>& result, std::vector<T>& in
  * @return Most frequent class index. Out of range index if all 0.
  */
 template<typename T>
-size_t mostFrequentClass(std::vector<T>& class_count, std::mt19937_64 random_number_generator) {
+size_t mostFrequentClass(const std::vector<T>& class_count, std::mt19937_64 random_number_generator) {
   std::vector<size_t> major_classes;
 
 // Find maximum count
@@ -262,19 +262,20 @@ size_t mostFrequentClass(std::vector<T>& class_count, std::mt19937_64 random_num
  * @param random_number_generator Random number generator
  * @return Most frequent value
  */
-double mostFrequentValue(std::unordered_map<double, size_t>& class_count, std::mt19937_64 random_number_generator);
+double mostFrequentValue(const std::unordered_map<double, size_t>& class_count,
+    std::mt19937_64 random_number_generator);
 
 /**
  * Compute concordance index for given data and summed cumulative hazard function/estimate
- * @param data Pointer to Data object
+ * @param data Reference to Data object
  * @param sum_chf Summed chf over timepoints for each sample
  * @param dependent_varID ID of dependent variable
  * @param status_varID ID of status variable
  * @param sample_IDs IDs of samples, for example OOB samples
  * @return concordance index
  */
-double computeConcordanceIndex(Data* data, std::vector<double>& sum_chf, size_t dependent_varID, size_t status_varID,
-    std::vector<size_t>& sample_IDs);
+double computeConcordanceIndex(const Data& data, const std::vector<double>& sum_chf, size_t dependent_varID,
+    size_t status_varID, const std::vector<size_t>& sample_IDs);
 
 /**
  * Convert a unsigned integer to string
@@ -304,7 +305,7 @@ size_t roundToNextMultiple(size_t value, uint multiple);
  * @param input String to be splitted
  * @param split_char Char to separate parts
  */
-void splitString(std::vector<std::string>& result, std::string input, char split_char);
+void splitString(std::vector<std::string>& result, const std::string& input, char split_char);
 
 /**
  * Create numbers from 0 to n_all-1, shuffle and split in two parts.
@@ -327,22 +328,22 @@ void shuffleAndSplit(std::vector<size_t>& first_part, std::vector<size_t>& secon
  * @param random_number_generator Random number generator
  */
 void shuffleAndSplitAppend(std::vector<size_t>& first_part, std::vector<size_t>& second_part, size_t n_all,
-    size_t n_first, std::vector<size_t>& mapping, std::mt19937_64 random_number_generator);
+    size_t n_first, const std::vector<size_t>& mapping, std::mt19937_64 random_number_generator);
 
 /**
  * Check if not too many factor levels and all values in unordered categorical variables are positive integers.
- * @param data Pointer to data object
+ * @param data Reference to data object
  * @param unordered_variable_names Names of unordered variables
  * @return Error message, empty if no problem occured
  */
-std::string checkUnorderedVariables(Data* data, std::vector<std::string> unordered_variable_names);
+std::string checkUnorderedVariables(const Data& data, const std::vector<std::string>& unordered_variable_names);
 
 /**
  * Check if all values in double vector are positive integers.
  * @param all_values Double vector to check
  * @return True if all values are positive integers
  */
-bool checkPositiveIntegers(std::vector<double>& all_values);
+bool checkPositiveIntegers(const std::vector<double>& all_values);
 
 /**
  * Compute p-value for maximally selected rank statistics using Lau92 approximation
@@ -364,7 +365,7 @@ double maxstatPValueLau92(double b, double minprop, double maxprop);
  * @param m Vector with number of observations smaller or equal than cutpoint, sorted, only for unique cutpoints
  * @return p-value for quantile b
  */
-double maxstatPValueLau94(double b, double minprop, double maxprop, size_t N, std::vector<size_t>& m);
+double maxstatPValueLau94(double b, double minprop, double maxprop, size_t N, const std::vector<size_t>& m);
 
 /**
  * Compute unadjusted p-value for rank statistics
@@ -401,7 +402,7 @@ std::vector<double> adjustPvalues(std::vector<double>& unadjusted_pvalues);
  * @return Indices of sorted values
  */
 template<typename T>
-std::vector<size_t> order(std::vector<T>& values, bool decreasing) {
+std::vector<size_t> order(const std::vector<T>& values, bool decreasing) {
 // Create index vector
   std::vector<size_t> indices(values.size());
   std::iota(indices.begin(), indices.end(), 0);
@@ -421,7 +422,7 @@ std::vector<size_t> order(std::vector<T>& values, bool decreasing) {
  * @return Ranks of input values
  */
 template<typename T>
-std::vector<double> rank(std::vector<T>& values) {
+std::vector<double> rank(const std::vector<T>& values) {
   size_t num_values = values.size();
 
 // Order
@@ -452,7 +453,7 @@ std::vector<double> rank(std::vector<T>& values) {
  * @param status Censoring indicator
  * @return Logrank scores
  */
-std::vector<double> logrankScores(std::vector<double>& time, std::vector<double>& status);
+std::vector<double> logrankScores(const std::vector<double>& time, const std::vector<double>& status);
 
 /**
  * Compute maximally selected rank statistics
@@ -464,8 +465,8 @@ std::vector<double> logrankScores(std::vector<double>& time, std::vector<double>
  * @param minprop Minimal proportion of observations left of cutpoint
  * @param maxprop Maximal proportion of observations left of cutpoint
  */
-void maxstat(std::vector<double>& scores, std::vector<double>& x, std::vector<size_t>& indices, double& best_maxstat,
-    double& best_split_value, double minprop, double maxprop);
+void maxstat(const std::vector<double>& scores, const std::vector<double>& x, const std::vector<size_t>& indices,
+    double& best_maxstat, double& best_split_value, double minprop, double maxprop);
 
 /**
  * Compute number of samples smaller or equal than each unique value in x
@@ -473,7 +474,7 @@ void maxstat(std::vector<double>& scores, std::vector<double>& x, std::vector<si
  * @param indices Ordering of x
  * @return Vector of number of samples smaller or equal than each unique value in x
  */
-std::vector<size_t> numSamplesLeftOfCutpoint(std::vector<double>& x, std::vector<size_t>& indices);
+std::vector<size_t> numSamplesLeftOfCutpoint(std::vector<double>& x, const std::vector<size_t>& indices);
 
 // User interrupt from R
 #ifdef R_BUILD
@@ -486,6 +487,7 @@ inline bool checkInterrupt() {
 }
 #endif
 
-} // namespace ranger
+}
+ // namespace ranger
 
 #endif /* UTILITY_H_ */
