@@ -153,7 +153,7 @@ void loadDoubleVectorFromFile(std::vector<double>& result, std::string filename)
  * @param num_samples Number of samples to draw
  */
 void drawWithoutReplacementSkip(std::vector<size_t>& result, std::mt19937_64& random_number_generator,
-    size_t range_length, std::vector<size_t>& skip, size_t num_samples);
+    size_t range_length, const std::vector<size_t>& skip, size_t num_samples);
 
 /**
  * Simple algorithm for sampling without replacement, faster for smaller num_samples
@@ -164,7 +164,7 @@ void drawWithoutReplacementSkip(std::vector<size_t>& result, std::mt19937_64& ra
  * @param num_samples Number of samples to draw
  */
 void drawWithoutReplacementSimple(std::vector<size_t>& result, std::mt19937_64& random_number_generator, size_t max,
-    std::vector<size_t>& skip, size_t num_samples);
+    const std::vector<size_t>& skip, size_t num_samples);
 
 /**
  * Fisher Yates algorithm for sampling without replacement.
@@ -175,7 +175,7 @@ void drawWithoutReplacementSimple(std::vector<size_t>& result, std::mt19937_64& 
  * @param num_samples Number of samples to draw
  */
 void drawWithoutReplacementFisherYates(std::vector<size_t>& result, std::mt19937_64& random_number_generator,
-    size_t max, std::vector<size_t>& skip, size_t num_samples);
+    size_t max, const std::vector<size_t>& skip, size_t num_samples);
 
 /**
  * Draw random numers without replacement and with weighted probabilites from vector of indices.
@@ -186,7 +186,7 @@ void drawWithoutReplacementFisherYates(std::vector<size_t>& result, std::mt19937
  * @param weights A weight for each element of indices
  */
 void drawWithoutReplacementWeighted(std::vector<size_t>& result, std::mt19937_64& random_number_generator,
-    std::vector<size_t>& indices, size_t num_samples, std::vector<double>& weights);
+    const std::vector<size_t>& indices, size_t num_samples, const std::vector<double>& weights);
 
 /**
  * Draw random numers without replacement and with weighted probabilites from 0..n-1.
@@ -197,7 +197,7 @@ void drawWithoutReplacementWeighted(std::vector<size_t>& result, std::mt19937_64
  * @param weights A weight for each element of indices
  */
 void drawWithoutReplacementWeighted(std::vector<size_t>& result, std::mt19937_64& random_number_generator,
-    size_t max_index, size_t num_samples, std::vector<double>& weights);
+    size_t max_index, size_t num_samples, const std::vector<double>& weights);
 
 /**
  * Draw random numbers of a vector without replacement.

@@ -25,14 +25,15 @@ namespace ranger {
 class Data {
 public:
   Data();
-  virtual ~Data();
 
   Data(const Data&) = delete;
   Data& operator=(const Data&) = delete;
 
+  virtual ~Data() = default;
+
   virtual double get(size_t row, size_t col) const = 0;
 
-  size_t getVariableID(std::string variable_name);
+  size_t getVariableID(const std::string& variable_name) const;
 
   virtual void reserveMemory() = 0;
   virtual void set(size_t col, size_t row, double value, bool& error) = 0;
@@ -43,9 +44,9 @@ public:
   bool loadFromFileWhitespace(std::ifstream& input_file, std::string header_line);
   bool loadFromFileOther(std::ifstream& input_file, std::string header_line, char seperator);
 
-  void getAllValues(std::vector<double>& all_values, std::vector<size_t>& sampleIDs, size_t varID);
+  void getAllValues(std::vector<double>& all_values, std::vector<size_t>& sampleIDs, size_t varID) const;
 
-  void getMinMaxValues(double& min, double&max, std::vector<size_t>& sampleIDs, size_t varID);
+  void getMinMaxValues(double& min, double&max, std::vector<size_t>& sampleIDs, size_t varID) const;
 
   size_t getIndex(size_t row, size_t col) const {
     // Use permuted data for corrected impurity importance
@@ -135,7 +136,7 @@ public:
     }
   }
 
-  std::vector<size_t>& getNoSplitVariables() {
+  const std::vector<size_t>& getNoSplitVariables() const noexcept {
     return no_split_variables;
   }
 
@@ -144,7 +145,7 @@ public:
     std::sort(no_split_variables.begin(), no_split_variables.end());
   }
 
-  std::vector<bool>& getIsOrderedVariable() {
+  const std::vector<bool>& getIsOrderedVariable() noexcept {
     return is_ordered_variable;
   }
 
@@ -160,7 +161,7 @@ public:
     this->is_ordered_variable = is_ordered_variable;
   }
 
-  bool isOrderedVariable(size_t varID) const {
+  const bool isOrderedVariable(size_t varID) const {
     // Use permuted data for corrected impurity importance
     if (varID >= num_cols) {
       varID = getUnpermutedVarID(varID);
@@ -174,11 +175,11 @@ public:
     std::shuffle(permuted_sampleIDs.begin(), permuted_sampleIDs.end(), random_number_generator);
   }
 
-  size_t getPermutedSampleID(size_t sampleID) const {
+  const size_t getPermutedSampleID(size_t sampleID) const {
     return permuted_sampleIDs[sampleID];
   }
 
-  size_t getUnpermutedVarID(size_t varID) const {
+  const size_t getUnpermutedVarID(size_t varID) const {
     if (varID >= num_cols) {
       varID -= num_cols;
 
@@ -211,7 +212,7 @@ protected:
 
   bool externalData;
 
-  size_t* index_data;
+  std::vector<size_t> index_data;
   std::vector<std::vector<double>> unique_data_values;
   size_t max_num_unique_values;
 
