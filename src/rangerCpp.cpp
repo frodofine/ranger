@@ -96,9 +96,9 @@ Rcpp::List rangerCpp(uint treetype, std::string dependent_variable_name,
     
     // Initialize data 
     if (use_sparse_data) {
-      data = new DataSparse(&sparse_data, variable_names, num_rows, num_cols);
+      data = new DataSparse(sparse_data, variable_names, num_rows, num_cols);
     } else {
-      data = new DataDouble(input_data.begin(), variable_names, num_rows, num_cols);
+      data = new DataDouble(input_data, variable_names, num_rows, num_cols);
     }
 
     // If there is snp data, add it

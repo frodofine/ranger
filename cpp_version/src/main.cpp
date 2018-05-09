@@ -21,6 +21,7 @@
 #include "ForestRegression.h"
 #include "ForestSurvival.h"
 #include "ForestProbability.h"
+#include "utility.h"
 
 using namespace ranger;
 
@@ -28,23 +29,23 @@ void run_ranger(const ArgumentHandler& arg_handler, std::ostream& verbose_out) {
   verbose_out << "Starting Ranger." << std::endl;
 
   // Create forest object
-  std::unique_ptr<Forest> forest {};
+  std::unique_ptr<Forest> forest { };
   switch (arg_handler.treetype) {
   case TREE_CLASSIFICATION:
     if (arg_handler.probability) {
-      forest = std::unique_ptr<Forest>(new ForestProbability);
+      forest = make_unique<ForestProbability>();
     } else {
-      forest = std::unique_ptr<Forest>(new ForestClassification);
+      forest = make_unique<ForestClassification>();
     }
     break;
   case TREE_REGRESSION:
-    forest = std::unique_ptr<Forest>(new ForestRegression);
+    forest = make_unique<ForestRegression>();
     break;
   case TREE_SURVIVAL:
-    forest = std::unique_ptr<Forest>(new ForestSurvival);
+    forest = make_unique<ForestSurvival>();
     break;
   case TREE_PROBABILITY:
-    forest = std::unique_ptr<Forest>(new ForestProbability);
+    forest = make_unique<ForestProbability>();
     break;
   }
 
