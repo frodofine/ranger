@@ -32,10 +32,11 @@ namespace ranger {
 class Forest {
 public:
   Forest();
-  virtual ~Forest();
 
   Forest(const Forest&) = delete;
   Forest& operator=(const Forest&) = delete;
+
+  virtual ~Forest() = default;
 
   // Init from c++ main or Rcpp from R
   void initCpp(std::string dependent_variable_name, MemoryMode memory_mode, std::string input_file, uint mtry,
@@ -46,15 +47,15 @@ public:
       const std::vector<std::string>& unordered_variable_names, bool memory_saving_splitting, SplitRule splitrule,
       std::string case_weights_file, bool predict_all, double sample_fraction, double alpha, double minprop,
       bool holdout, PredictionType prediction_type, uint num_random_splits);
-  void initR(std::string dependent_variable_name, Data* input_data, uint mtry, uint num_trees,
+  void initR(std::string dependent_variable_name, std::unique_ptr<Data> input_data, uint mtry, uint num_trees,
       std::ostream* verbose_out, uint seed, uint num_threads, ImportanceMode importance_mode, uint min_node_size,
-      std::vector<std::vector<double>>& split_select_weights, const std::vector<std::string>& always_split_variable_names,
-      std::string status_variable_name, bool prediction_mode, bool sample_with_replacement,
-      const std::vector<std::string>& unordered_variable_names, bool memory_saving_splitting, SplitRule splitrule,
-      std::vector<double>& case_weights, bool predict_all, bool keep_inbag, std::vector<double>& sample_fraction,
-      double alpha, double minprop, bool holdout, PredictionType prediction_type, uint num_random_splits,
-      bool order_snps);
-  void init(std::string dependent_variable_name, MemoryMode memory_mode, Data* input_data, uint mtry,
+      std::vector<std::vector<double>>& split_select_weights,
+      const std::vector<std::string>& always_split_variable_names, std::string status_variable_name,
+      bool prediction_mode, bool sample_with_replacement, const std::vector<std::string>& unordered_variable_names,
+      bool memory_saving_splitting, SplitRule splitrule, std::vector<double>& case_weights, bool predict_all,
+      bool keep_inbag, std::vector<double>& sample_fraction, double alpha, double minprop, bool holdout,
+      PredictionType prediction_type, uint num_random_splits, bool order_snps);
+  void init(std::string dependent_variable_name, MemoryMode memory_mode, std::unique_ptr<Data> input_data, uint mtry,
       std::string output_prefix, uint num_trees, uint seed, uint num_threads, ImportanceMode importance_mode,
       uint min_node_size, std::string status_variable_name, bool prediction_mode, bool sample_with_replacement,
       const std::vector<std::string>& unordered_variable_names, bool memory_saving_splitting, SplitRule splitrule,
@@ -103,7 +104,7 @@ public:
   double getOverallPredictionError() const {
     return overall_prediction_error;
   }
-  const std::vector<std::vector<std::vector<double>> >& getPredictions() const {
+  const std::vector<std::vector<std::vector<double>>>& getPredictions() const {
     return predictions;
   }
   size_t getDependentVarId() const {
@@ -156,8 +157,8 @@ protected:
   void growTreesInThread(uint thread_idx, std::vector<double>* variable_importance);
   void predictTreesInThread(uint thread_idx, const Data* prediction_data, bool oob_prediction);
   void predictInternalInThread(uint thread_idx);
-  void computeTreePermutationImportanceInThread(uint thread_idx, std::vector<double>* importance,
-      std::vector<double>* variance);
+  void computeTreePermutationImportanceInThread(uint thread_idx, std::vector<double>& importance,
+      std::vector<double>& variance);
 
   // Load forest from file
   void loadFromFile(std::string filename);
@@ -209,8 +210,8 @@ protected:
   std::condition_variable condition_variable;
 #endif
 
-  std::vector<Tree*> trees;
-  Data* data;
+  std::vector<std::unique_ptr<Tree>> trees;
+  std::unique_ptr<Data> data;
 
   std::vector<std::vector<std::vector<double>>> predictions;
   double overall_prediction_error;
