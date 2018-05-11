@@ -48,7 +48,7 @@ void ForestSurvival::loadForest(size_t dependent_varID, size_t num_trees,
 std::vector<std::vector<std::vector<double>>> ForestSurvival::getChf() const {
   std::vector<std::vector<std::vector<double>>> result;
   result.reserve(num_trees);
-  for (Tree* tree : trees) {
+  for (const auto& tree : trees) {
     const auto& temp = dynamic_cast<const TreeSurvival&>(*tree);
     result.push_back(temp.getChf());
   }
