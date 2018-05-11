@@ -31,6 +31,7 @@ public:
 
   DataDouble(const DataDouble&) = delete;
   DataDouble& operator=(const DataDouble&) = delete;
+
   virtual ~DataDouble() override = default;
 
   double get(size_t row, size_t col) const override {

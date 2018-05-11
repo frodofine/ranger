@@ -29,6 +29,7 @@ public:
 
   DataChar(const DataChar&) = delete;
   DataChar& operator=(const DataChar&) = delete;
+
   virtual ~DataChar() override = default;
 
   double get(size_t row, size_t col) const override {

@@ -26,6 +26,7 @@ public:
 
   DataFloat(const DataFloat&) = delete;
   DataFloat& operator=(const DataFloat&) = delete;
+
   virtual ~DataFloat() override = default;
 
   double get(size_t row, size_t col) const override {

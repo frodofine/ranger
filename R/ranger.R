@@ -688,7 +688,6 @@ ranger <- function(formula = NULL, data = NULL, num.trees = 500, mtry = NULL,
     }
   }
   
-
   ## Prediction mode always false. Use predict.ranger() method.
   prediction.mode <- FALSE
   predict.all <- FALSE
