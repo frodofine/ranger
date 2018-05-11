@@ -556,7 +556,8 @@ void TreeClassification::findBestSplitValueExtraTrees(size_t nodeID, size_t varI
 }
 
 void TreeClassification::findBestSplitValueExtraTreesUnordered(size_t nodeID, size_t varID, size_t num_classes,
-    const std::vector<size_t>& class_counts, size_t num_samples_node, double& best_value, size_t& best_varID, double& best_decrease) {
+    const std::vector<size_t>& class_counts, size_t num_samples_node, double& best_value, size_t& best_varID,
+    double& best_decrease) {
 
   size_t num_unique_values = data->getNumUniqueDataValues(varID);
 
