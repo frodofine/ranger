@@ -45,7 +45,7 @@ using namespace ranger;
 
 // [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::export]]
-Rcpp::List rangerCpp(uint treetype, std::string dependent_variable_name, Rcpp::NumericMatrix input_data,
+Rcpp::List rangerCpp(uint treetype, std::string dependent_variable_name, Rcpp::NumericMatrix& input_data,
     std::vector<std::string> variable_names, uint mtry, uint num_trees, bool verbose, uint seed, uint num_threads,
     bool write_forest, uint importance_mode_r, uint min_node_size,
     std::vector<std::vector<double>>& split_select_weights, bool use_split_select_weights,
@@ -97,11 +97,8 @@ Rcpp::List rangerCpp(uint treetype, std::string dependent_variable_name, Rcpp::N
     if (use_sparse_data) {
       data = make_unique<DataSparse>(sparse_data, variable_names, num_rows, num_cols);
     } else {
-      // std::vector<double> input_data_copy { input_data.begin(), input_data.end() };
-      // input_data = Rcpp::NumericMatrix { }; // Clear original input data
-      // data = make_unique<DataDouble>(std::move(input_data_copy), variable_names, num_rows, num_cols);
       data = make_unique<DataDouble>(std::move(Rcpp::as<std::vector<double>>(input_data)), variable_names, num_rows,
-          num_cols);
+         num_cols);
     }
 
     // If there is snp data, add it
